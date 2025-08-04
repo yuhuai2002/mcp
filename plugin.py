@@ -7,9 +7,9 @@ def handle_message(message):
         "question": message
     }
     
-    # 调用 MCP 服务
+    # ✅ 调用 MCP 服务（使用公网 IP）
     response = requests.post(
-        "http://127.0.0.1:8000/ask",
+        "http://18.163.69.177:8000/ask",  # ✅ 改为你的服务器公网 IP
         headers={"Content-Type": "application/json"},
         json=data
     )
