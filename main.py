@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # main.py
-
+print("✅ MCP Plugin loaded successfully!")  # 添加这行
 import requests
 from requests.exceptions import RequestException
 
