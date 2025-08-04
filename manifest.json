@@ -1,8 +1,8 @@
 {
-  "name": "test",
+  "name": "MCP Qwen Plugin",
   "version": "1.0.0",
   "description": "通过 MCP 调用 Qwen-Plus 模型",
   "author": "yuhuai2002",
-  "main": "test.py",
-  "entry": "handle_message"
+  "main": "main.py",
+  "entry": "main"
 }
