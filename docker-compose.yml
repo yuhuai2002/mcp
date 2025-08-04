@@ -1,0 +1,38 @@
+version: "3"
+
+services:
+  traefik:
+    image: traefik:v2.10
+    container_name: traefik
+    command:
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--providers.docker=true"
+      - "--api.dashboard=true"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.email=1207561367@qq.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./letsencrypt:/letsencrypt"
+    restart: always
+
+  langbot-wecom:
+    image: rockchin/langbot:latest
+    container_name: langbot-wecom
+    volumes:
+      - /user/langbot-wecom/data:/app/data
+      - /user/langbot-wecom/plugins:/app/plugins
+    restart: on-failure
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.langbot.rule=Host(`hk.fyuniq.cn`)"
+      - "traefik.http.routers.langbot.entrypoints=websecure"
+      - "traefik.http.routers.langbot.tls.certresolver=myresolver"
+      - "traefik.http.services.langbot.loadbalancer.server.port=5300"
+    environment:
+      - LANG=C.UTF-8
+      - LC_ALL=C.UTF-8
