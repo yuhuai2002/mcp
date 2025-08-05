@@ -1,9 +1,9 @@
 {
-  "name": "MCP Qwen Plugin",
+  "name": "MCPQwenPlugin",
   "version": "1.0.0",
-  "description": "通过 MCP 调用 Qwen-Plus 模型",
+  "description": "LangBot 插件：通过 MCP 调用 Qwen-Plus 模型",
   "author": "yuhuai2002",
   "main": "main.py",
-  "entry": "MCPPlugin",
+  "entry": "MCPQwenPlugin",
   "requirements": ["requests"]
 }
