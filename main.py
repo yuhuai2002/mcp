@@ -5,7 +5,7 @@ import requests
 import pkg.platform.types as platform_types
 
 
-@register(name="MCP Qwen Plugin", description="通过 MCP 调用 Qwen-Plus 模型", version="1.0.0", author="yuhuai2002")
+@register(name="MCPQwenPlugin", description="通过 MCP 调用 Qwen-Plus 模型", version="1.0.0", author="yuhuai2002")
 class MCPQwenPlugin(BasePlugin):
 
     @handler(PersonNormalMessageReceived)
@@ -14,7 +14,7 @@ class MCPQwenPlugin(BasePlugin):
         # 获取用户发送的文本消息
         question = ctx.event.text_message.strip()
 
-        # 可选：只在消息以 !qwen 开头时触发，避免干扰
+        # 只在消息以 !qwen 开头时触发
         if not question.startswith("!qwen"):
             return
 
