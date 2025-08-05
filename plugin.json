@@ -1,7 +1,9 @@
 {
-  "name": "mcp-qwen-plugin",
+  "name": "MCP Qwen Plugin",
   "version": "1.0.0",
   "description": "通过 MCP 调用 Qwen-Plus 模型",
   "author": "yuhuai2002",
-  "entry": "main.py"
+  "main": "main.py",
+  "entry": "MCPPlugin",
+  "requirements": ["requests"]
 }
