@@ -1,50 +1,28 @@
 # main.py
-# -*- coding: utf-8 -*-
-from pkg.plugin.models import PluginMetadata
-from pkg.plugin.host import EventContext, PluginHost
-from pkg.plugin.decorator import plugin, event
-
+from pkg.plugin.context import BasePlugin, APIHost, EventContext, register, handler
+from pkg.plugin.events import PersonNormalMessageReceived  # 可按平台替换
 import requests
 from requests.exceptions import RequestException
 
-@plugin(
-    metadata=PluginMetadata(
-        name="mcp-qwen-plugin",
-        description="通过 MCP 调用 Qwen-Plus 模型",
-        version="1.0.0",
-        author="yuhuai2002",
-    )
-)
-class MCPQwenPlugin:
-    def __init__(self, host: PluginHost):
-        self.host = host
+class MCPQwenPlugin(BasePlugin):
+    def __init__(self, host: APIHost):
+        super().__init__(host)
         print("✅ MCP Qwen Plugin initialized")
 
-    @event("ON_HANDLE_CONTEXT")
-    def handle_message(self, ctx: EventContext):
-        """
-        处理用户输入消息，转发给 MCP 模型
-        """
-        question = ctx.event.text  # 获取用户输入的消息文本
-
-        data = {
-            "question": question
-        }
-
+    @handler(PersonNormalMessageReceived)
+    async def on_person_message(self, ctx: EventContext):
+        msg = ctx.event.text_message
+        data = {"question": msg}
         try:
-            response = requests.post(
-                "http://18.163.69.177:8000/ask",
-                headers={"Content-Type": "application/json"},
-                json=data,
-                timeout=10
-            )
-            response.raise_for_status()
-            result = response.json()
-            answer = result.get("answer", "MCP 未返回有效答案")
-
+            resp = requests.post("http://18.163.69.177:8000/ask",
+                                 json=data, timeout=10)
+            resp.raise_for_status()
+            ans = resp.json().get("answer", "无有效答案")
         except RequestException as e:
-            answer = f"请求 MCP 服务失败: {str(e)}"
+            ans = f"请求失败: {e}"
         except Exception as e:
-            answer = f"内部错误: {str(e)}"
+            ans = f"内部错误: {e}"
+        ctx.add_return("reply", [ans])
+        ctx.prevent_default()
 
-        ctx.add_return("reply", answer)
+register(MCPQwenPlugin)
